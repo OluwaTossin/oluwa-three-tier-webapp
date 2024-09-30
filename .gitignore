@@ -1,10 +1,11 @@
 # Terraform files
 .terraform/              # Terraform working directory files
-terraform.tfstate        # State file (contains infrastructure details)
-terraform.tfstate.backup # Backup state file
+.terraform.lock.hcl      # Lock file created by Terraform
+*.tfstate                # State file (contains infrastructure details)
+*.tfstate.backup         # Backup state file
+*.tfplan                 # Binary Terraform plan file
 *.tfvars                 # Variable files (might include secrets, such as API keys)
 crash.log                # Crash log in case Terraform crashes
-*.tfplan                 # Binary Terraform plan file
 
 # General files
 *.log                    # Log files
