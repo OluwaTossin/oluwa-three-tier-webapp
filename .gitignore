@@ -1,0 +1,18 @@
+# Terraform files
+.terraform/              # Terraform working directory files
+terraform.tfstate        # State file (contains infrastructure details)
+terraform.tfstate.backup # Backup state file
+*.tfvars                 # Variable files (might include secrets, such as API keys)
+crash.log                # Crash log in case Terraform crashes
+*.tfplan                 # Binary Terraform plan file
+
+# General files
+*.log                    # Log files
+*.swp                    # Swap files created by editors
+.idea/                   # Ignore IDE settings (for JetBrains IDEs like IntelliJ)
+.vscode/                 # Ignore VSCode settings
+node_modules/            # In case you're using Node.js for the frontend
+.DS_Store                # macOS specific files
+
+# AWS credentials (Optional: Do not track AWS credentials)
+.aws/                    # If using the AWS CLI, sometimes credentials are stored here
