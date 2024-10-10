@@ -3,10 +3,11 @@ version: 0.2
 phases:
   install:
     commands:
-      - npm install
+      - cd frontend             # Change to frontend directory
+      - npm install             # Install npm dependencies
   build:
     commands:
-      - npm run build
+      - npm run build          # Build the application
   post_build:
     commands:
       - aws s3 sync ./build s3://deployment-oluwa --acl public-read
