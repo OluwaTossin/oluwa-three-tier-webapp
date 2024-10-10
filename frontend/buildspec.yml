@@ -10,4 +10,4 @@ phases:
       - npm run build          # Build the application
   post_build:
     commands:
-      - aws s3 sync ./build s3://deployment-oluwa --acl public-read
+      - aws s3 sync ./build s3://deployment-oluwa
