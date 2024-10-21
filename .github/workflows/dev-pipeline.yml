@@ -27,7 +27,7 @@ jobs:
         working-directory: frontend
         run: npm run build
 
-      - name: Debug - List frontend directory
+      - name: Debug - List entire frontend directory
         run: |
           ls -R frontend
 
@@ -43,6 +43,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Debug - Check the workspace structure
+        run: ls -R
 
       - name: Deploy Frontend to S3
         env:
