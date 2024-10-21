@@ -20,17 +20,24 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies (Frontend)
-        working-directory: frontend
-        run: npm install
+        run: |
+          cd frontend
+          npm install
 
       - name: Build Frontend
-        working-directory: frontend
-        run: npm run build
-
-      - name: Debug - List frontend/build directory
         run: |
-          echo "Verifying frontend/build directory:"
-          ls -R frontend/build || echo "Build directory does not exist"
+          cd frontend
+          npm run build
+
+      # Add a step to list the contents of the frontend directory
+      - name: Debug - List contents of frontend
+        run: |
+          ls frontend
+
+      # Add a step to list the contents of the frontend/build directory
+      - name: Debug - List contents of frontend/build
+        run: |
+          ls frontend/build
 
   deploy:
     name: Deploy to Dev Environment
@@ -40,15 +47,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Debug - Confirm build directory structure before deploy
-        run: |
-          echo "Listing workspace directories:"
-          ls -R
-          echo "Listing contents of frontend directory:"
-          ls -R frontend
-          echo "Listing contents of frontend/build:"
-          ls -R frontend/build || echo "Build directory does not exist"
 
       - name: Deploy Frontend to S3
         env:
