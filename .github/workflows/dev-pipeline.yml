@@ -29,15 +29,10 @@ jobs:
           cd frontend
           npm run build
 
-      # Add a step to list the contents of the frontend directory
-      - name: Debug - List contents of frontend
+      # Debug step to list contents of the frontend directory
+      - name: List contents of frontend
         run: |
-          ls frontend
-
-      # Add a step to list the contents of the frontend/build directory
-      - name: Debug - List contents of frontend/build
-        run: |
-          ls frontend/build
+          ls -R frontend
 
   deploy:
     name: Deploy to Dev Environment
@@ -47,6 +42,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      # Debug step to confirm build directory presence after build step
+      - name: Confirm build directory structure before deploy
+        run: |
+          ls -R frontend/build
 
       - name: Deploy Frontend to S3
         env:
