@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Build Frontend and Backend
+    name: Build Frontend
     runs-on: ubuntu-latest
 
     steps:
@@ -29,16 +29,6 @@ jobs:
           cd frontend
           npm run build
 
-      - name: Install dependencies (Backend)
-        run: |
-          cd backend
-          npm install
-
-      - name: Build Backend
-        run: |
-          cd backend
-          npm run build
-
   deploy:
     name: Deploy to Prod Environment
     needs: build
@@ -56,19 +46,3 @@ jobs:
           AWS_REGION: 'us-west-2'
         run: |
           aws s3 sync frontend/build s3://prod-frontend-bucket-oluwa --acl public-read
-
-      - name: Deploy Backend to EC2 Using SSM
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
-          AWS_REGION: 'us-west-2'
-        run: |
-          aws ssm send-command \
-            --document-name "AWS-RunShellScript" \
-            --targets "Key=InstanceIds,Values=i-0a58d4dd7d1dcb72c" \
-            --parameters commands=["cd /home/ec2-user/backend", "git pull", "npm install", "pm2 restart server"] \
-            --comment "Deploy backend code to prod instance" \
-            --timeout-seconds 600 \
-            --max-concurrency "1" \
-            --max-errors "0"
