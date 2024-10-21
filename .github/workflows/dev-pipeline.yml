@@ -20,19 +20,20 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies (Frontend)
-        run: |
-          cd frontend
-          npm install
+        working-directory: frontend
+        run: npm install
 
       - name: Build Frontend
-        run: |
-          cd frontend
-          npm run build
+        working-directory: frontend
+        run: npm run build
 
-      - name: Debug - List contents of frontend directory after build
+      - name: Debug - List frontend directory
         run: |
-          cd frontend
-          ls -R
+          ls -R frontend
+
+      - name: Debug - List build directory
+        run: |
+          ls -R frontend/build || echo "Build directory does not exist"
 
   deploy:
     name: Deploy to Dev Environment
