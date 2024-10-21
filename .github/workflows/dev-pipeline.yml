@@ -29,9 +29,13 @@ jobs:
           cd frontend
           npm run build
 
-      - name: List files in the build directory
+      - name: List contents of frontend directory
         run: |
-          ls -R frontend/build
+          ls -R frontend
+
+      - name: List contents of build directory
+        run: |
+          ls -R frontend/build || echo "Build directory does not exist"
 
   deploy:
     name: Deploy to Dev Environment
