@@ -29,6 +29,10 @@ jobs:
           cd frontend
           npm run build
 
+      - name: List files in the build directory
+        run: |
+          ls -R frontend/build
+
   deploy:
     name: Deploy to Dev Environment
     needs: build
