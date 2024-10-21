@@ -29,13 +29,9 @@ jobs:
           cd frontend
           npm run build
 
-      - name: List contents of frontend directory
+      - name: Debug - List entire frontend directory
         run: |
           ls -R frontend
-
-      - name: List contents of build directory
-        run: |
-          ls -R frontend/build || echo "Build directory does not exist"
 
   deploy:
     name: Deploy to Dev Environment
@@ -45,6 +41,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Debug - List contents of frontend/build
+        run: |
+          ls -R frontend/build || echo "Build directory does not exist"
 
       - name: Deploy Frontend to S3
         env:
