@@ -27,13 +27,9 @@ jobs:
         working-directory: frontend
         run: npm run build
 
-      - name: Debug - List directory structure after build
+      - name: Debug - List frontend/build directory
         run: |
-          echo "Listing the entire workspace after building:"
-          ls -R
-          echo "Listing frontend directory specifically:"
-          ls -R frontend
-          echo "Listing frontend/build directory specifically:"
+          echo "Verifying frontend/build directory:"
           ls -R frontend/build || echo "Build directory does not exist"
 
   deploy:
@@ -45,8 +41,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Debug - List structure before deploying
-        run: ls -R
+      - name: Debug - Confirm build directory structure before deploy
+        run: |
+          echo "Listing workspace directories:"
+          ls -R
+          echo "Listing contents of frontend directory:"
+          ls -R frontend
+          echo "Listing contents of frontend/build:"
+          ls -R frontend/build || echo "Build directory does not exist"
 
       - name: Deploy Frontend to S3
         env:
