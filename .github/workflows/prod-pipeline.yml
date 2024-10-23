@@ -70,7 +70,7 @@ jobs:
           aws ssm send-command \
             --document-name "AWS-RunShellScript" \
             --targets "Key=InstanceIds,Values=i-0a58d4dd7d1dcb72c" \
-            --parameters commands=["cd /home/ec2-user/backend", "git pull", "npm install", "pm2 restart server"] \
+            --parameters commands='["cd /home/ec2-user/backend", "git pull", "npm install", "pm2 restart server"]' \
             --comment "Deploy backend code to prod instance" \
             --timeout-seconds 600 \
             --max-concurrency "1" \
