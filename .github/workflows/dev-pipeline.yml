@@ -1,0 +1,63 @@
+name: Dev CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Install dependencies and build (Frontend)
+        run: |
+          cd frontend
+          npm install
+          npm run build
+
+      - name: Upload build directory as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-build
+          path: frontend/build
+
+  deploy:
+    name: Deploy to Dev Environment
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: frontend-build
+          path: frontend/build
+
+      - name: Deploy Frontend to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+          AWS_REGION: 'us-west-2'
+        run: |
+          if [ -d "frontend/build" ]; then
+            aws s3 sync frontend/build s3://dev-frontend-bucket-oluwa
+          else
+            echo "Build directory does not exist."
+            exit 1
+          fi
+
+
