@@ -25,10 +25,11 @@ jobs:
           npm install
           npm run build
 
-      - name: Verify build output
-        run: |
-          echo "Verifying build directory..."
-          ls -la frontend/build
+      - name: Upload build directory as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-build
+          path: frontend/build
 
   deploy:
     name: Deploy to Dev Environment
@@ -39,10 +40,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Verify build directory before deploying
-        run: |
-          cd frontend
-          ls -la
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: frontend-build
+          path: frontend/build
 
       - name: Deploy Frontend to S3
         env:
@@ -51,9 +53,8 @@ jobs:
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
           AWS_REGION: 'us-west-2'
         run: |
-          cd frontend
-          if [ -d "./build" ]; then
-            aws s3 sync ./build s3://dev-frontend-bucket-oluwa --acl public-read
+          if [ -d "frontend/build" ]; then
+            aws s3 sync frontend/build s3://dev-frontend-bucket-oluwa --acl public-read
           else
             echo "Build directory does not exist."
             exit 1
