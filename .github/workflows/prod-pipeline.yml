@@ -37,11 +37,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Download build artifact
         uses: actions/download-artifact@v3
         with:
           name: frontend-build
-          path: frontend
+          path: frontend/build
 
       - name: Deploy Frontend to S3
         env:
