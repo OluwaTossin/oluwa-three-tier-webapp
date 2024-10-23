@@ -60,4 +60,18 @@ jobs:
             exit 1
           fi
 
-
+      - name: Deploy Backend to Dev Instance
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+          AWS_REGION: 'us-west-2'
+        run: |
+          aws ssm send-command \
+            --document-name "AWS-RunShellScript" \
+            --targets "Key=InstanceIds,Values=i-0aa6f466cf9dd4345" \
+            --parameters commands='["cd /home/ec2-user/backend", "git pull", "npm install", "pm2 restart server"]' \
+            --comment "Deploy backend code to dev instance" \
+            --timeout-seconds 600 \
+            --max-concurrency "1" \
+            --max-errors "0"
