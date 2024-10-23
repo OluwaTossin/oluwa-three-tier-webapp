@@ -25,6 +25,11 @@ jobs:
           npm install
           npm run build
 
+      - name: Verify build output
+        run: |
+          echo "Verifying build directory..."
+          ls -la frontend/build
+
   deploy:
     name: Deploy to Dev Environment
     needs: build
@@ -33,6 +38,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Verify build directory before deploying
+        run: |
+          cd frontend
+          ls -la
 
       - name: Deploy Frontend to S3
         env:
