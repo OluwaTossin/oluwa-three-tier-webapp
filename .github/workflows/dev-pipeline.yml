@@ -19,20 +19,11 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install dependencies (Frontend)
+      - name: Install dependencies and build (Frontend)
         run: |
           cd frontend
           npm install
-
-      - name: Build Frontend
-        run: |
-          cd frontend
           npm run build
-
-      # Debug step to list contents of the frontend directory
-      - name: List contents of frontend
-        run: |
-          ls -R frontend
 
   deploy:
     name: Deploy to Dev Environment
@@ -43,11 +34,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Debug step to confirm build directory presence after build step
-      - name: Confirm build directory structure before deploy
-        run: |
-          ls -R frontend/build
-
       - name: Deploy Frontend to S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -55,4 +41,10 @@ jobs:
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
           AWS_REGION: 'us-west-2'
         run: |
-          aws s3 sync frontend/build s3://dev-frontend-bucket-oluwa --acl public-read
+          cd frontend
+          if [ -d "./build" ]; then
+            aws s3 sync ./build s3://dev-frontend-bucket-oluwa --acl public-read
+          else
+            echo "Build directory does not exist."
+            exit 1
+          fi
