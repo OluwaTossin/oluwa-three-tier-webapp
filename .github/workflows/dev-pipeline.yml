@@ -54,7 +54,7 @@ jobs:
           AWS_REGION: 'us-west-2'
         run: |
           if [ -d "frontend/build" ]; then
-            aws s3 sync frontend/build s3://dev-frontend-bucket-oluwa --acl public-read
+            aws s3 sync frontend/build s3://dev-frontend-bucket-oluwa
           else
             echo "Build directory does not exist."
             exit 1
